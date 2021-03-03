@@ -2,7 +2,7 @@
  * Copyright (c) 2012, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  */
-package tree;
+package io.treefx.night;
 
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Group;
@@ -14,9 +14,9 @@ import javafx.scene.transform.Rotate;
 
 import static java.lang.Math.PI;
 import static java.lang.Math.cos;
-import static tree.RandomUtil.getGaussianRandom;
-import static tree.RandomUtil.getRandom;
-import static tree.Util.addChildToParent;
+import static io.treefx.night.RandomUtil.getGaussianRandom;
+import static io.treefx.night.RandomUtil.getRandom;
+import static io.treefx.night.Util.addChildToParent;
 
 
 public class Branch extends Group {
@@ -37,7 +37,7 @@ public class Branch extends Group {
 
   public Branch(Branch parentBranch, Type type, int depth) {
     this();
-    final var locAngle = new SimpleDoubleProperty(0);
+    final SimpleDoubleProperty locAngle = new SimpleDoubleProperty(0);
     globalAngle.bind(locAngle.add(parentBranch.globalAngle.get()));
     double transY = 0; //place of beggining child branch
     switch (type) {

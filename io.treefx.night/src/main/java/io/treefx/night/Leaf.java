@@ -2,7 +2,7 @@
  * Copyright (c) 2012, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  */
-package tree;
+package io.treefx.night;
 
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
@@ -24,10 +24,10 @@ public class Leaf extends Ellipse {
     setScaleX(0); //trick to hide leaves
     setScaleY(0);
 
-    final var rand = random() * 0.5 + 0.3;
+    final double rand = random() * 0.5 + 0.3;
     AUTUMN_COLOR = Color.color(random() * 0.1 + 0.8, rand, rand / 2);
 
-    var color = new Color(random() * 0.5, random() * 0.5 + 0.5, 0, 1);
+    Color color = new Color(random() * 0.5, random() * 0.5 + 0.5, 0, 1);
     if (parentBranch.globalH < 400 && random() < 0.8) { //bottom leaf is darker
       color = color.darker();
     }

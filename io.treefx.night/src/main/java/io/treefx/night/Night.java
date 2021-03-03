@@ -2,16 +2,13 @@
  * Copyright (c) 2012, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  */
-package tree;
+package io.treefx.night;
 
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
@@ -27,9 +24,9 @@ import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-public class Main extends Application {
+public class Night extends Application {
 
-  private static final String SOURCE = Main.class.getClassLoader().getResource("Ronkorb_etenraku_ryuteki.wav").toExternalForm();
+  private static final String SOURCE = Night.class.getClassLoader().getResource("Ronkorb_etenraku_ryuteki.wav").toExternalForm();
   private static final int SCENE_WIDTH = 1000;
   private static final int SCENE_HEIGHT = 800;
   private static final int NUMBER_OF_BRANCH_GENERATIONS = 8;
@@ -49,7 +46,7 @@ public class Main extends Application {
     stage.setScene(new AppScene());
 
     //close application
-    final var close = new Button("X");
+    final Button close = new Button("X");
     close.setFont(Font.font("Arial", FontWeight.BOLD, 20));
     close.setStyle("-fx-background-color:transparent;-fx-text-fill:#ff0000;");
     close.setOpacity(0);
@@ -70,21 +67,12 @@ public class Main extends Application {
         System.exit(0);
     });
 
-/*    //output FPS
-    new Timer().schedule(new TimerTask() {
-      @Override
-      public void run() {
-        System.out.println("FPS " + com.sun.javafx.perf.PerformanceTracker.getSceneTracker(stage.getScene()).getInstantFPS());
-      }
-    }, 0, 1000);*/
-
-
     new Animator(
       new TreeGenerator(treeContent, NUMBER_OF_BRANCH_GENERATIONS),
       new GrassGenerator(grassContent, NUM_BLADES)
     ).run();
 
-    var sound = new MediaPlayer(new Media(SOURCE));
+    MediaPlayer sound = new MediaPlayer(new Media(SOURCE));
     sound.setCycleCount(MediaPlayer.INDEFINITE);
 
     sound.play();
@@ -97,11 +85,11 @@ public class Main extends Application {
       super(rootContent = new Group(), SCENE_WIDTH, SCENE_HEIGHT, Color.TRANSPARENT);
       rootContent.setClip(new Ellipse(0, SCENE_HEIGHT / 2, SCENE_WIDTH / 3, SCENE_HEIGHT / 2)); //Scene shape and size
 
-      final var background = new Rectangle(-SCENE_WIDTH / 2, 0, SCENE_WIDTH, SCENE_HEIGHT);
+      final Rectangle background = new Rectangle(-SCENE_WIDTH / 2, 0, SCENE_WIDTH, SCENE_HEIGHT);
       background.setFill(new LinearGradient(0, 0, 0, SCENE_HEIGHT, false, CycleMethod.NO_CYCLE, new Stop(0, Color.YELLOWGREEN), new Stop(0.3, Color.LIGHTBLUE),
         new Stop(1., new Color(1, 1, 1, 0)))); //background color
       rootContent.getChildren().add(background);
-      rootContent.getChildren().add(treeContent = new Group()); // tree layout
+      rootContent.getChildren().add(treeContent = new Group()); // io.treefx.tree layout
       rootContent.getChildren().add(grassContent = new Group()); // grass layout
       rootContent.getTransforms().addAll(new Translate(SCENE_WIDTH / 2, SCENE_HEIGHT), new Rotate(180));
 

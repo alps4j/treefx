@@ -2,7 +2,7 @@
  * Copyright (c) 2012, Oracle and/or its affiliates. All rights reserved. DO NOT
  * ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  */
-package tree;
+package io.treefx.night;
 
 import javafx.scene.Group;
 
@@ -19,7 +19,7 @@ public class Tree extends Group {
   List<Leaf> leafage = new ArrayList<>();
 
   public Tree(int depth) {
-    for (var i = 0; i < depth; i++) {
+    for (int i = 0; i < depth; i++) {
       generations.add(new ArrayList<>());
     }
   }

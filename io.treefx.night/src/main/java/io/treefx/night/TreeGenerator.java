@@ -2,17 +2,17 @@
  * Copyright (c) 2012, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  */
-package tree;
+package io.treefx.night;
 
 import javafx.scene.Group;
-import tree.Branch.Type;
+import io.treefx.night.Branch.Type;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static tree.RandomUtil.getRandomIndex;
-import static tree.Util.addChildToParent;
+import static io.treefx.night.RandomUtil.getRandomIndex;
+import static io.treefx.night.Util.addChildToParent;
 
 
 public class TreeGenerator {
@@ -28,16 +28,16 @@ public class TreeGenerator {
   }
 
   public Tree generateTree() {
-    final var tree = new Tree(treeDepth);
+    final Tree tree = new Tree(treeDepth);
     addChildToParent(content, tree);
 
-    final var root = new Branch();
+    final Branch root = new Branch();
     addChildToParent(tree, root);
     tree.generations.get(0).add(root); //root branch
 
-    for (var i = 1; i < treeDepth; i++) {
-      for (var parentBranch : tree.generations.get(i - 1)) {
-        final var newBranches = generateBranches(parentBranch, i);
+    for (int i = 1; i < treeDepth; i++) {
+      for (Branch parentBranch : tree.generations.get(i - 1)) {
+        final List<Branch> newBranches = generateBranches(parentBranch, i);
         if (newBranches.isEmpty()) {
           tree.crown.add(parentBranch);
         }
@@ -68,8 +68,8 @@ public class TreeGenerator {
 
   private List<Leaf> generateLeafage(List<Branch> crown) {
     List<Leaf> leafage = new ArrayList<>();
-    for (final var branch : crown) {
-      var leaf = new Leaf(branch);
+    for (final Branch branch : crown) {
+      Leaf leaf = new Leaf(branch);
       leafage.add(leaf);
       addChildToParent(branch, leaf);
     }
@@ -78,9 +78,9 @@ public class TreeGenerator {
 
   private List<Flower> generateFlowers(List<Branch> crown) {
     List<Flower> flowers = new ArrayList<>(flowersNumber);
-    for (var i = 0; i < flowersNumber; i++) {
-      var branch = crown.get(getRandomIndex(0, crown.size() - 1));
-      final var flower = new Flower(branch);
+    for (int i = 0; i < flowersNumber; i++) {
+      Branch branch = crown.get(getRandomIndex(0, crown.size() - 1));
+      final Flower flower = new Flower(branch);
       addChildToParent(branch, flower);
       flowers.add(flower);
     }

@@ -2,7 +2,7 @@
  * Copyright (c) 2012, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  */
-package tree;
+package io.treefx.night;
 
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
@@ -28,7 +28,7 @@ class GrassWindAnimation extends Transition {
     setCycleCount(Animation.INDEFINITE);
     setInterpolator(Interpolator.LINEAR);
     setCycleDuration(animationTime);
-    for (final var blade : blades) {
+    for (final Blade blade : blades) {
       blade.phase.bind(phase);
     }
   }

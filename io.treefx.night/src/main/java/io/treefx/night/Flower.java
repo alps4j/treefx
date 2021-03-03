@@ -2,7 +2,7 @@
  * Copyright (c) 2012, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  */
-package tree;
+package io.treefx.night;
 
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
@@ -21,10 +21,10 @@ public class Flower extends Group {
   private final List<Ellipse> petals = new ArrayList<Ellipse>(2 * N + 1);
 
   public Flower() {
-    final var color = Color.color(1, random() * 0.4 + 0.6, 1);
-    final var petalsNum = 2 * N;
-    for (var i = 0; i < petalsNum; i++) {
-      final var petal = new Ellipse(2, 5);
+    final Color color = Color.color(1, random() * 0.4 + 0.6, 1);
+    final int petalsNum = 2 * N;
+    for (int i = 0; i < petalsNum; i++) {
+      final Ellipse petal = new Ellipse(2, 5);
 
       if (i % 2 == 0) {
         petal.setFill(color);
@@ -37,12 +37,12 @@ public class Flower extends Group {
       getChildren().add(petal);
       petals.add(petal);
     }
-    final var center = new Ellipse(2, 2);
+    final Ellipse center = new Ellipse(2, 2);
     center.setFill(Color.PINK);
     getChildren().add(center);
     petals.add(center);
 
-    for (final var petal : petals) {
+    for (final Ellipse petal : petals) {
       petal.setOpacity(0); //trick to hide flowers
     }
   }

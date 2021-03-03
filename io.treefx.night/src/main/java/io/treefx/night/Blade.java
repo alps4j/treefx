@@ -3,7 +3,7 @@
  * Copyright (c) 2012, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  */
-package tree;
+package io.treefx.night;
 
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -50,7 +50,7 @@ public class Blade extends Path {
       @Override
       protected double computeValue() {
 
-        final var xx0 = curve1.xProperty().get();
+        final double xx0 = curve1.xProperty().get();
         return Math.sqrt(h * h - xx0 * xx0);
       }
     }); //path of top of blade is circle

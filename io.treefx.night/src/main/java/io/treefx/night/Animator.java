@@ -2,7 +2,7 @@
  * Copyright (c) 2012, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  */
-package tree;
+package io.treefx.night;
 
 import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
@@ -17,6 +17,7 @@ import javafx.animation.Timeline;
 import javafx.animation.Transition;
 import javafx.animation.TranslateTransition;
 import javafx.beans.binding.DoubleBinding;
+import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
@@ -28,7 +29,7 @@ import java.util.List;
 import static java.lang.Math.random;
 import static java.lang.Math.sin;
 import static javafx.animation.Animation.INDEFINITE;
-import static tree.Util.addChildToParent;
+import static io.treefx.night.Util.addChildToParent;
 
 
 public class Animator implements Runnable {
@@ -51,22 +52,22 @@ public class Animator implements Runnable {
   @Override
   public void run() {
 
-    var tree = treeGenerator.generateTree();
-    var grass = grassGenerator.generateGrass();
+    Tree tree = treeGenerator.generateTree();
+    List<Blade> grass = grassGenerator.generateGrass();
 
     // branch growing animation
-    var branchGrowingAnimation = new SequentialTransition();
+    SequentialTransition branchGrowingAnimation = new SequentialTransition();
     //Wind animation
-    var treeWindAnimation = new ParallelTransition();
+    ParallelTransition treeWindAnimation = new ParallelTransition();
 
-    for (var i = 0; i < tree.generations.size(); i++) {
-      var branchGeneration = tree.generations.get(i);
+    for (int i = 0; i < tree.generations.size(); i++) {
+      List<Branch> branchGeneration = tree.generations.get(i);
       branchGrowingAnimation.getChildren().add(animateBranchGrowing(branchGeneration, i, BRANCH_GROWING_DURATION)); //create animation for current crown
       treeWindAnimation.getChildren().add(animateTreeWind(branchGeneration, i, WIND_CYCLE_DURATION));
     }
 
 
-    // Main animation: grass bending, tree bending, tree growing, seasons changing
+    // Main animation: grass bending, io.treefx.tree bending, io.treefx.tree growing, seasons changing
     final Transition all = new ParallelTransition(new GrassWindAnimation(grass), treeWindAnimation, new SequentialTransition(branchGrowingAnimation, seasonsAnimation(tree, grass)));
     all.play();
 
@@ -74,14 +75,14 @@ public class Animator implements Runnable {
 
   //Animatation for  growing branches
   private Animation animateBranchGrowing(List<Branch> branchGeneration, int depth, Duration duration) {
-    final var sameDepthBranchAnimation = new ParallelTransition();
+    final ParallelTransition sameDepthBranchAnimation = new ParallelTransition();
 
-    for (final var branch : branchGeneration) {
-      final var keyValue = new KeyValue(branch.base.endYProperty(), branch.length);
-      final var keyFrame = new KeyFrame(duration, keyValue);
-      final var branchGrowingAnimation = new Timeline(keyFrame);//line is growing by changinh endY from 0 to brunch.lengt
+    for (final Branch branch : branchGeneration) {
+      final KeyValue keyValue = new KeyValue(branch.base.endYProperty(), branch.length);
+      final KeyFrame keyFrame = new KeyFrame(duration, keyValue);
+      final Timeline branchGrowingAnimation = new Timeline(keyFrame);//line is growing by changinh endY from 0 to brunch.lengt
 
-      final var pauseTransition = new PauseTransition();
+      final PauseTransition pauseTransition = new PauseTransition();
       pauseTransition.setDuration(Duration.ONE);
       pauseTransition.setOnFinished(event -> branch.base.setStrokeWidth(branch.length / 25));
 
@@ -101,13 +102,13 @@ public class Animator implements Runnable {
 
   // animate wind. Tree is bending
   private Animation animateTreeWind(List<Branch> branchGeneration, int depth, Duration duration) {
-    var wind = new ParallelTransition();
-    for (final var brunch : branchGeneration) {
-      final var rotation = new Rotate(0);
+    ParallelTransition wind = new ParallelTransition();
+    for (final Branch brunch : branchGeneration) {
+      final Rotate rotation = new Rotate(0);
       brunch.getTransforms().add(rotation);
 
-      var timeline = new Timeline();
-      var keyValue = new KeyValue(rotation.angleProperty(), depth * 2);
+      Timeline timeline = new Timeline();
+      KeyValue keyValue = new KeyValue(rotation.angleProperty(), depth * 2);
 
       timeline.getKeyFrames().add(new KeyFrame(duration, keyValue));
       timeline.setAutoReverse(true);
@@ -120,11 +121,11 @@ public class Animator implements Runnable {
 
   private Transition seasonsAnimation(final Tree tree, final List<Blade> grass) {
 
-    var spring = animateSpring(tree.leafage, grass);
-    var flowers = animateFlowers(tree.flowers);
-    var autumn = animateAutumn(tree.leafage, grass);
+    Transition spring = animateSpring(tree.leafage, grass);
+    Transition flowers = animateFlowers(tree.flowers);
+    Transition autumn = animateAutumn(tree.leafage, grass);
 
-    var sequentialTransition = new SequentialTransition();
+    SequentialTransition sequentialTransition = new SequentialTransition();
     sequentialTransition.getChildren().addAll(spring, flowers, autumn);
     sequentialTransition.setCycleCount(INDEFINITE);
 
@@ -132,20 +133,20 @@ public class Animator implements Runnable {
   }
 
   private Transition animateSpring(List<Leaf> leafage, List<Blade> grass) {
-    var springAnimation = new ParallelTransition();
-    for (final var blade : grass) {
+    ParallelTransition springAnimation = new ParallelTransition();
+    for (final Blade blade : grass) {
       //grass become green
 
-      final var fillTransition = new FillTransition();
+      final FillTransition fillTransition = new FillTransition();
       fillTransition.setShape(blade);
       fillTransition.setToValue(blade.SPRING_COLOR);
       fillTransition.setDuration(GRASS_BECOME_GREEN_DURATION);
 
       springAnimation.getChildren().add(fillTransition);
     }
-    for (var leaf : leafage) {
+    for (Leaf leaf : leafage) {
       //leafage appear
-      final var scaleTransition = new ScaleTransition();
+      final ScaleTransition scaleTransition = new ScaleTransition();
       scaleTransition.setToX(1);
       scaleTransition.setToY(1);
       scaleTransition.setNode(leaf);
@@ -158,19 +159,19 @@ public class Animator implements Runnable {
 
   private Transition animateFlowers(List<Flower> flowers) {
 
-    var flowersAppearAndFallDown = new ParallelTransition();
+    ParallelTransition flowersAppearAndFallDown = new ParallelTransition();
 
-    for (var i = 0; i < flowers.size(); i++) {
-      final var flower = flowers.get(i);
-      for (var pental : flower.getPetals()) {
+    for (int i = 0; i < flowers.size(); i++) {
+      final Flower flower = flowers.get(i);
+      for (Ellipse pental : flower.getPetals()) {
 
-        final var fadeTransition = new FadeTransition();
+        final FadeTransition fadeTransition = new FadeTransition();
         fadeTransition.setDelay(FLOWER_APPEARING_DURATION.divide(3).multiply(i + 1));
         fadeTransition.setDuration(FLOWER_APPEARING_DURATION);
         fadeTransition.setNode(pental);
         fadeTransition.setToValue(1);
 
-        final var sequentialTransition = new SequentialTransition(
+        final SequentialTransition sequentialTransition = new SequentialTransition(
           //flowers appearing
           fadeTransition,
           //fall down
@@ -184,16 +185,16 @@ public class Animator implements Runnable {
   }
 
   private Transition animateAutumn(List<Leaf> leafage, List<Blade> grass) {
-    var autumn = new ParallelTransition();
+    ParallelTransition autumn = new ParallelTransition();
 
     //Leafage animation
-    var yellowLeafage = new ParallelTransition();
-    var dissappearLeafage = new ParallelTransition();
+    ParallelTransition yellowLeafage = new ParallelTransition();
+    ParallelTransition dissappearLeafage = new ParallelTransition();
 
-    for (final var leaf : leafage) {
+    for (final Leaf leaf : leafage) {
 
       //become yellow
-      final var toYellow = new FillTransition();
+      final FillTransition toYellow = new FillTransition();
       toYellow.setShape(leaf);
       toYellow.setToValue(leaf.AUTUMN_COLOR);
       toYellow.setDuration(LEAF_APPEARING_DURATION);
@@ -201,27 +202,27 @@ public class Animator implements Runnable {
       yellowLeafage.getChildren().add(toYellow);
 
       //fall down
-      var fakeLeafageDown = fakeFallDownEllipseAnimation(leaf, leaf.AUTUMN_COLOR, node -> {
+      Animation fakeLeafageDown = fakeFallDownEllipseAnimation(leaf, leaf.AUTUMN_COLOR, node -> {
         node.setScaleX(0);
         node.setScaleY(0);
       });
 
-      final var fillTransition = new FillTransition();
+      final FillTransition fillTransition = new FillTransition();
       fillTransition.setShape(leaf);
       fillTransition.setToValue((Color) leaf.getFill());
       fillTransition.setDuration(Duration.ONE);
 
       //disappear
-      final var sequentialTransition = new SequentialTransition(fakeLeafageDown, fillTransition);
+      final SequentialTransition sequentialTransition = new SequentialTransition(fakeLeafageDown, fillTransition);
 
       dissappearLeafage.getChildren().add(sequentialTransition);
     }
 
     //Grass animation
-    var grassBecomeYellowAnimation = new ParallelTransition();
-    for (final var blade : grass) {
+    ParallelTransition grassBecomeYellowAnimation = new ParallelTransition();
+    for (final Blade blade : grass) {
       //become yellow
-      final var toYellow = new FillTransition();
+      final FillTransition toYellow = new FillTransition();
       toYellow.setShape(blade);
       toYellow.setToValue(blade.AUTUMN_COLOR);
       toYellow.setDelay(Duration.seconds(1 * random()));
@@ -240,16 +241,16 @@ public class Animator implements Runnable {
 
   private Animation fakeFallDownEllipseAnimation(final Ellipse sourceEllipse, Color fakeColor, final HideMethod hideMethod) {
 
-    final var fake = copyEllipse(sourceEllipse, fakeColor);
+    final Ellipse fake = copyEllipse(sourceEllipse, fakeColor);
     addChildToParent(treeGenerator.content, fake);
 
-    final var replaceFakeWithSource = new PauseTransition();
+    final PauseTransition replaceFakeWithSource = new PauseTransition();
     replaceFakeWithSource.setDuration(Duration.ONE);
     replaceFakeWithSource.setDelay(Duration.minutes(0.9 * random() + 0.1));
     replaceFakeWithSource.setOnFinished(event -> {
-      final var position = treeGenerator.content.sceneToLocal(sourceEllipse.localToScene(0, 0));
+      final Point2D position = treeGenerator.content.sceneToLocal(sourceEllipse.localToScene(0, 0));
 
-      var sinPath = new DoubleBinding() {
+      DoubleBinding sinPath = new DoubleBinding() {
 
         {
           bind(fake.translateYProperty());
@@ -270,12 +271,12 @@ public class Animator implements Runnable {
       hideMethod.hide(sourceEllipse);
     });
 
-    final var translateTransition = new TranslateTransition();
+    final TranslateTransition translateTransition = new TranslateTransition();
     translateTransition.setDuration(Duration.seconds(30));
     translateTransition.setToY(random() * 30 + 1);
     translateTransition.setNode(fake);
 
-    final var fadeTransition = new FadeTransition();
+    final FadeTransition fadeTransition = new FadeTransition();
     fadeTransition.setToValue(0);
     fadeTransition.setDelay(Duration.seconds(5));
     fadeTransition.setDuration(Duration.seconds(2));
@@ -290,7 +291,7 @@ public class Animator implements Runnable {
   }
 
   private Ellipse copyEllipse(Ellipse petalOld, Color color) {
-    var ellipse = new Ellipse();
+    Ellipse ellipse = new Ellipse();
     ellipse.setRadiusX(petalOld.getRadiusX());
     ellipse.setRadiusY(petalOld.getRadiusY());
     if (color == null) {
