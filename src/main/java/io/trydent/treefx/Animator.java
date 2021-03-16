@@ -2,7 +2,7 @@
  * Copyright (c) 2012, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  */
-package io.treefx.night;
+package io.trydent.treefx;
 
 import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
@@ -29,7 +29,7 @@ import java.util.List;
 import static java.lang.Math.random;
 import static java.lang.Math.sin;
 import static javafx.animation.Animation.INDEFINITE;
-import static io.treefx.night.Util.addChildToParent;
+import static io.trydent.treefx.Util.addChildToParent;
 
 
 public class Animator implements Runnable {

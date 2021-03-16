@@ -2,14 +2,12 @@
  * Copyright (c) 2012, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  */
-package io.treefx.night;
+package io.trydent.treefx;
 
 import javafx.scene.Group;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static io.treefx.night.Util.addChildToParent;
 
 
 class GrassGenerator {
@@ -31,7 +29,7 @@ class GrassGenerator {
       final Blade blade = new Blade();
       grass.add(blade);
 
-      addChildToParent(content, blade);
+      Util.addChildToParent(content, blade);
     }
     return grass;
   }

@@ -2,7 +2,7 @@
  * Copyright (c) 2012, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  */
-package io.treefx.night;
+package io.trydent.treefx;
 
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Group;
@@ -14,9 +14,9 @@ import javafx.scene.transform.Rotate;
 
 import static java.lang.Math.PI;
 import static java.lang.Math.cos;
-import static io.treefx.night.RandomUtil.getGaussianRandom;
-import static io.treefx.night.RandomUtil.getRandom;
-import static io.treefx.night.Util.addChildToParent;
+import static io.trydent.treefx.RandomUtil.getGaussianRandom;
+import static io.trydent.treefx.RandomUtil.getRandom;
+import static io.trydent.treefx.Util.addChildToParent;
 
 
 public class Branch extends Group {

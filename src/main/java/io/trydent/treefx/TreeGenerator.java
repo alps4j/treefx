@@ -2,17 +2,13 @@
  * Copyright (c) 2012, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  */
-package io.treefx.night;
+package io.trydent.treefx;
 
 import javafx.scene.Group;
-import io.treefx.night.Branch.Type;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import static io.treefx.night.RandomUtil.getRandomIndex;
-import static io.treefx.night.Util.addChildToParent;
 
 
 public class TreeGenerator {
@@ -29,10 +25,10 @@ public class TreeGenerator {
 
   public Tree generateTree() {
     final Tree tree = new Tree(treeDepth);
-    addChildToParent(content, tree);
+    Util.addChildToParent(content, tree);
 
     final Branch root = new Branch();
-    addChildToParent(tree, root);
+    Util.addChildToParent(tree, root);
     tree.generations.get(0).add(root); //root branch
 
     for (int i = 1; i < treeDepth; i++) {
@@ -58,9 +54,9 @@ public class TreeGenerator {
       if (parentBranch.length < 10) {
         return Collections.emptyList();
       }
-      branches.add(new Branch(parentBranch, Type.LEFT, depth)); //add side left branch
-      branches.add(new Branch(parentBranch, Type.RIGHT, depth)); // add side right branch
-      branches.add(new Branch(parentBranch, Type.TOP, depth)); //add top branch
+      branches.add(new Branch(parentBranch, Branch.Type.LEFT, depth)); //add side left branch
+      branches.add(new Branch(parentBranch, Branch.Type.RIGHT, depth)); // add side right branch
+      branches.add(new Branch(parentBranch, Branch.Type.TOP, depth)); //add top branch
     }
 
     return branches;
@@ -71,7 +67,7 @@ public class TreeGenerator {
     for (final Branch branch : crown) {
       Leaf leaf = new Leaf(branch);
       leafage.add(leaf);
-      addChildToParent(branch, leaf);
+      Util.addChildToParent(branch, leaf);
     }
     return leafage;
   }
@@ -79,9 +75,9 @@ public class TreeGenerator {
   private List<Flower> generateFlowers(List<Branch> crown) {
     List<Flower> flowers = new ArrayList<>(flowersNumber);
     for (int i = 0; i < flowersNumber; i++) {
-      Branch branch = crown.get(getRandomIndex(0, crown.size() - 1));
+      Branch branch = crown.get(RandomUtil.getRandomIndex(0, crown.size() - 1));
       final Flower flower = new Flower(branch);
-      addChildToParent(branch, flower);
+      Util.addChildToParent(branch, flower);
       flowers.add(flower);
     }
     return flowers;
